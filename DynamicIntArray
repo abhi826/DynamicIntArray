@@ -1,0 +1,188 @@
+package edu.njit.cs114;
+
+/**
+ * Author: Ravi Varadarajan
+ * Date created: 2/17/20
+ */
+public class DynamicIntArray {
+
+    private static final int DEFAULT_INITIAL_CAPACITY = 1;
+
+    private Integer [] arr;
+    private int size=1;
+    private int currentPos=0;
+    private int elementsInArr=0;
+    private int nCopies=0;
+
+    public DynamicIntArray(int initialCapacity) {
+        arr = new Integer[initialCapacity];
+    }
+
+    public DynamicIntArray() {
+        this(DEFAULT_INITIAL_CAPACITY);
+    }
+
+
+    /**
+     * Add element at specified index position shifting to right elements at positions higher than
+     *   or equal to index
+     * @param index
+     * @param elem
+     * @throws IndexOutOfBoundsException if index < 0 or index >= size()
+     */
+    public void add(int index, int elem) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Invalid index");
+        }
+        /**
+         * Complete code here
+         */
+        if(currentPos>=size){
+            grow();
+        }
+
+        for(int i=currentPos-1;i>=index;i--){
+            arr[i+1]=arr[i];
+        }
+        currentPos++;
+        elementsInArr++;
+        arr[index]=elem;
+    }
+
+    public void grow(){
+        Integer[] temp = new Integer[size * 2];
+        size *= 2;
+        for (int i = 0; i < currentPos; i++) {
+            nCopies++;
+            temp[i] = arr[i];
+        }
+        arr = temp;
+    }
+
+
+    /**
+     * Append element to the end of the array
+     * @param elem
+     */
+    public void add(int elem) {
+        /**
+         * Complete code here
+         */
+        if(currentPos==size) {
+
+                Integer[] temp = new Integer[size * 2];
+                size *= 2;
+                for (int i = 0; i < currentPos; i++) {
+                    nCopies++;
+
+                    temp[i] = arr[i];
+                }
+                arr = temp;
+            }
+
+
+        arr[currentPos++]=elem;
+        elementsInArr++;
+
+    }
+
+    /**
+     * Set the element at specified index position replacing any previous value
+     * @param index
+     * @param elem
+     * @return previous value in the index position
+     * @throws IndexOutOfBoundsException if index < 0 or index >= size()
+     */
+    public int set(int index, int elem) throws IndexOutOfBoundsException {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Invalid index");
+        }
+        /**
+         * Complete code here
+         */
+        int temp=arr[index];
+        arr[index]=elem;
+        return temp;
+    }
+
+    /**
+     * Get the element at the specified index position
+     * @param index
+     * @return
+     * @throws IndexOutOfBoundsException if index < 0 or index >= size()
+     */
+    public int get(int index) throws IndexOutOfBoundsException{
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Invalid index");
+        }
+        return arr[index];
+    }
+
+    /**
+     * Remove and return the element at the specified index position. The elements with positions
+     *  higher than index are shifted to left
+     * @param index
+     * @return
+     * @throws IndexOutOfBoundsException if index < 0 or index >= size()
+     */
+    public int remove(int index) throws IndexOutOfBoundsException {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Invalid index");
+        }
+        /**
+         * Complete code here for homework
+         */
+        int temp=arr[index];
+        for(int i=index;i<currentPos-1;i++){
+            arr[i]=arr[i+1];
+        }
+        return temp; // to be removed once code is completed
+    }
+
+    /**
+     * Remove and return the element at the end of the array
+     * @return
+     * @throws Exception if size() == 0
+     */
+    public int remove() throws Exception {
+        if (size == 0) {
+            throw new Exception("Array is empty");
+        }
+        /**
+         * Complete code here for homework
+         */
+        int temp=arr[currentPos-1];
+        arr[currentPos-1]=0;
+        return temp; // to be removed once code is completed
+    }
+
+    /**
+     * Returns the number of elements in the array
+     * @return
+     */
+    public int size() {
+        return elementsInArr;
+    }
+
+    /**
+     * Returns the total number of copy operations done due to expansion of array
+     * @return
+     */
+    public int nCopies() {
+        return nCopies;
+    }
+
+
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("(" + arr.length + ")");
+        builder.append("[");
+        for (int i=0; i < elementsInArr; i++) {
+            if (i > 0) {
+                builder.append(",");
+            }
+            builder.append(arr[i] == null ? "" : arr[i]);
+        }
+        builder.append("]");
+        return builder.toString();
+    }
