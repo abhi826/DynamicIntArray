@@ -4,14 +4,21 @@ import java.util.*;
  * Author: Ravi Varadarajan
  * Date created: 2/17/20
  */
+/*
+***************************************************************************************************************
+ANSWER TO LAB:
+The time complexity is linear because as the number of insertions increases, the copy cost seem to increase
+in a linear fashion. For example, when n=100,000, the copy cost is 131,071 and when n=200,000 the copy cost
+is 262,143. As the number of insertions and copy cost are roughly equivalent, it can be estimated that the
+time complexity is linear.
+***************************************************************************************************************
+ */
 public class DynamicIntArray {
 
     private static final int DEFAULT_INITIAL_CAPACITY = 1;
-//size should show the number of elements in the array while totalSizeOfArray should be the total length of the array
+
     private Integer [] arr;
     private int size=0;
-    private int currentPos=0;
-    private int totalSizeOfArray=1;
     private int nCopies=0;
 
     public DynamicIntArray(int initialCapacity) {
@@ -37,22 +44,22 @@ public class DynamicIntArray {
         /**
          * Complete code here
          */
-        if(currentPos>=totalSizeOfArray){
+        if(size>=arr.length){
             grow();
         }
 
-        for(int i=currentPos-1;i>=index;i--){
+        for(int i=size-1;i>=index;i--){
             arr[i+1]=arr[i];
         }
-        currentPos++;
         size++;
         arr[index]=elem;
     }
 
     public void grow(){
-        Integer[] temp = new Integer[totalSizeOfArray * 2];
-        totalSizeOfArray *= 2;
-        for (int i = 0; i < currentPos; i++) {
+        int growSize=(arr.length==0?1:arr.length*2);
+        Integer[] temp = new Integer[growSize];
+
+        for (int i = 0; i < size; i++) {
             nCopies++;
             temp[i] = arr[i];
         }
@@ -68,20 +75,12 @@ public class DynamicIntArray {
         /**
          * Complete code here
          */
-         if(currentPos==totalSizeOfArray) {
-                totalSizeOfArray=(totalSizeOfArray==0?1:totalSizeOfArray);
-                Integer[] temp = new Integer[totalSizeOfArray * 2];
-            totalSizeOfArray *= 2;
-                for (int i = 0; i < currentPos; i++) {
-                    nCopies++;
-
-                    temp[i] = arr[i];
-                }
-                arr = temp;
+         if(size==arr.length) {
+                grow();
             }
 
 
-        arr[currentPos++]=elem;
+        arr[size]=elem;
         size++;
 
     }
@@ -133,23 +132,23 @@ public class DynamicIntArray {
          * Complete code here for homework
          */
         int temp=arr[index];
-        for(int i=index;i<currentPos-1;i++){
+        for(int i=index;i<size-1;i++){
             arr[i]=arr[i+1];
         }
-        arr[currentPos-1]=0;
-        currentPos--;
+        arr[size-1]=0;
         size--;
-        shrink();
+        if(size<=0.25*arr.length) {
+            shrink();
+        }
         return temp; // to be removed once code is completed
     }
 
     public void shrink(){
-        Integer[] temp= new Integer[currentPos];
-        for(int i=0;i<currentPos;i++){
+        Integer[] temp= new Integer[arr.length/2];
+        for(int i=0;i<size;i++){
             nCopies++;
             temp[i]=arr[i];
         }
-        totalSizeOfArray=currentPos;
         arr=temp;
 
 
@@ -167,11 +166,12 @@ public class DynamicIntArray {
         /**
          * Complete code here for homework
          */
-        int temp=arr[currentPos-1];
-        arr[currentPos-1]=0;
+        int temp=arr[size-1];
+        arr[size-1]=0;
         size--;
-        currentPos--;
-        shrink();
+        if(size<=0.25*arr.length) {
+            shrink();
+        }
         return temp; // to be removed once code is completed
     }
 
