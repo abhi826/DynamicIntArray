@@ -1,5 +1,5 @@
 package edu.njit.cs114;
-
+import java.util.*;
 /**
  * Author: Ravi Varadarajan
  * Date created: 2/17/20
@@ -7,11 +7,11 @@ package edu.njit.cs114;
 public class DynamicIntArray {
 
     private static final int DEFAULT_INITIAL_CAPACITY = 1;
-
+//size should show the number of elements in the array while totalSizeOfArray should be the total length of the array
     private Integer [] arr;
-    private int size=1;
+    private int size=0;
     private int currentPos=0;
-    private int elementsInArr=0;
+    private int totalSizeOfArray=1;
     private int nCopies=0;
 
     public DynamicIntArray(int initialCapacity) {
@@ -37,7 +37,7 @@ public class DynamicIntArray {
         /**
          * Complete code here
          */
-        if(currentPos>=size){
+        if(currentPos>=totalSizeOfArray){
             grow();
         }
 
@@ -45,13 +45,13 @@ public class DynamicIntArray {
             arr[i+1]=arr[i];
         }
         currentPos++;
-        elementsInArr++;
+        size++;
         arr[index]=elem;
     }
 
     public void grow(){
-        Integer[] temp = new Integer[size * 2];
-        size *= 2;
+        Integer[] temp = new Integer[totalSizeOfArray * 2];
+        totalSizeOfArray *= 2;
         for (int i = 0; i < currentPos; i++) {
             nCopies++;
             temp[i] = arr[i];
@@ -68,10 +68,10 @@ public class DynamicIntArray {
         /**
          * Complete code here
          */
-        if(currentPos==size) {
-
-                Integer[] temp = new Integer[size * 2];
-                size *= 2;
+         if(currentPos==totalSizeOfArray) {
+                totalSizeOfArray=(totalSizeOfArray==0?1:totalSizeOfArray);
+                Integer[] temp = new Integer[totalSizeOfArray * 2];
+            totalSizeOfArray *= 2;
                 for (int i = 0; i < currentPos; i++) {
                     nCopies++;
 
@@ -82,7 +82,7 @@ public class DynamicIntArray {
 
 
         arr[currentPos++]=elem;
-        elementsInArr++;
+        size++;
 
     }
 
@@ -136,7 +136,22 @@ public class DynamicIntArray {
         for(int i=index;i<currentPos-1;i++){
             arr[i]=arr[i+1];
         }
+        arr[currentPos-1]=0;
+        currentPos--;
+        size--;
+        shrink();
         return temp; // to be removed once code is completed
+    }
+
+    public void shrink(){
+        Integer[] temp= new Integer[currentPos];
+        for(int i=0;i<currentPos;i++){
+            temp[i]=arr[i];
+        }
+        totalSizeOfArray=currentPos;
+        arr=temp;
+
+
     }
 
     /**
@@ -153,6 +168,9 @@ public class DynamicIntArray {
          */
         int temp=arr[currentPos-1];
         arr[currentPos-1]=0;
+        size--;
+        currentPos--;
+        shrink();
         return temp; // to be removed once code is completed
     }
 
@@ -161,7 +179,7 @@ public class DynamicIntArray {
      * @return
      */
     public int size() {
-        return elementsInArr;
+        return size;
     }
 
     /**
@@ -177,7 +195,7 @@ public class DynamicIntArray {
         StringBuilder builder = new StringBuilder();
         builder.append("(" + arr.length + ")");
         builder.append("[");
-        for (int i=0; i < elementsInArr; i++) {
+        for (int i=0; i < size; i++) {
             if (i > 0) {
                 builder.append(",");
             }
