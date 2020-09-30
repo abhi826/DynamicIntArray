@@ -146,6 +146,7 @@ public class DynamicIntArray {
     public void shrink(){
         Integer[] temp= new Integer[currentPos];
         for(int i=0;i<currentPos;i++){
+            nCopies++;
             temp[i]=arr[i];
         }
         totalSizeOfArray=currentPos;
@@ -232,9 +233,9 @@ public class DynamicIntArray {
         System.out.println("array of size " + arr.size()+ " : " + arr);
 
 
-        arr.add(50);
-        arr.add(20);
-        arr.add(10);
+        arr.add(67);
+        arr.add(-14);
+        arr.add(15);
         System.out.println("array of size " + arr.size()+ " : " + arr);
 
  //---------------------------------------------------------------------------------
@@ -259,7 +260,7 @@ public class DynamicIntArray {
 
         // Uncomment these for homework 4
 
-       totalTime = 0;
+      totalTime = 0;
         for (int k=1; k < nItemsArr.length; k++) {
             for (int i = 0; i < nItemsArr[k]-nItemsArr[k-1]; i++) {
                 long startTime = System.currentTimeMillis();
